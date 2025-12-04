@@ -1,0 +1,47 @@
+[
+  {
+    "title": "Primary Button",
+    "fileName": "primary-button-65989d6c.stories.tsx",
+    "storyId": "story-65989d6c",
+    "hash": "65989d6c",
+    "createdAt": "2025-12-02T19:41:01.100Z",
+    "updatedAt": "2025-12-02T19:41:01.100Z",
+    "prompt": "Create a simple Shoelace button with primary variant"
+  },
+  {
+    "title": "Primary Button - Shoelace",
+    "fileName": "primary-button-shoelace-097617b6.stories.tsx",
+    "storyId": "story-097617b6",
+    "hash": "097617b6",
+    "createdAt": "2025-12-02T19:51:59.301Z",
+    "updatedAt": "2025-12-02T19:51:59.301Z",
+    "prompt": "Create a simple Shoelace button with primary variant"
+  },
+  {
+    "title": "Simple Button",
+    "fileName": "primary-button-shoelace-097617b6.stories.tsx",
+    "storyId": "primary-button-shoelace-097617b6.stories.tsx",
+    "hash": "52eb666f",
+    "createdAt": "2025-12-03T02:12:33.026Z",
+    "updatedAt": "2025-12-03T02:12:33.026Z",
+    "prompt": "Now make the button bigger."
+  },
+  {
+    "title": "Simple Info Alert with Icon",
+    "fileName": "simple-info-alert-with-icon-8f71b840.stories.tsx",
+    "storyId": "story-8f71b840",
+    "hash": "8f71b840",
+    "createdAt": "2025-12-03T04:23:30.229Z",
+    "updatedAt": "2025-12-03T04:23:30.229Z",
+    "prompt": "Create a simple info alert using the Shoelace sl-alert component with blue styling and an icon"
+  },
+  {
+    "title": "Card with Header Body and Footer",
+    "fileName": "card-with-header-body-and-footer-cc4aa930.stories.tsx",
+    "storyId": "story-cc4aa930",
+    "hash": "cc4aa930",
+    "createdAt": "2025-12-03T04:36:15.909Z",
+    "updatedAt": "2025-12-03T04:36:15.909Z",
+    "prompt": "Create a simple card component using sl-card with a header, body content, and a footer with a button"
+  }
+]

@@ -1,0 +1,14 @@
+{
+  "storyId": "card-with-header-body-and-footer",
+  "title": "Card With Header Body And Footer",
+  "versions": [
+    {
+      "id": "509326437a4c5c35",
+      "timestamp": 1764736575910,
+      "prompt": "Create a simple card component using sl-card with a header, body content, and a footer with a button",
+      "code": "import { html } from 'lit';\nimport type { Meta, StoryObj } from '@storybook/web-components';\nimport '@shoelace-style/shoelace/dist/components/card/card.js';\nimport '@shoelace-style/shoelace/dist/components/button/button.js';\n\nconst meta: Meta = {\n  title: 'Generated/Simple Card',\n  tags: ['autodocs'],\n  parameters: { layout: 'centered' },\n};\n\nexport default meta;\ntype Story = StoryObj;\n\nexport const Default: Story = {\n  render: () => html`\n    <sl-card style=\"max-width: 400px;\">\n      <div slot=\"header\">\n        Card Header\n      </div>\n      <p>\n        This is the main content of the card. It contains body text that provides\n        information or details about the subject of the card.\n      </p>\n      <div slot=\"footer\">\n        <sl-button variant=\"primary\">Action Button</sl-button>\n      </div>\n    </sl-card>\n  `,\n};\n\nexport const WithImage: Story = {\n  render: () => html`\n    <sl-card style=\"max-width: 400px;\">\n      <img\n        slot=\"image\"\n        src=\"https://picsum.photos/400/200\"\n        alt=\"Card header image\"\n      />\n      <div slot=\"header\">\n        Featured Content\n      </div>\n      <p>\n        This card includes an image at the top, making it perfect for showcasing\n        visual content alongside descriptive text.\n      </p>\n      <div slot=\"footer\">\n        <sl-button variant=\"primary\">Learn More</sl-button>\n      </div>\n    </sl-card>\n  `,\n};\n\nexport const MultipleButtons: Story = {\n  render: () => html`\n    <sl-card style=\"max-width: 400px;\">\n      <div slot=\"header\">\n        Confirm Action\n      </div>\n      <p>\n        Are you sure you want to proceed with this action? This cannot be undone.\n      </p>\n      <div slot=\"footer\" style=\"display: flex; gap: 0.5rem; justify-content: flex-end;\">\n        <sl-button variant=\"default\">Cancel</sl-button>\n        <sl-button variant=\"primary\">Confirm</sl-button>\n      </div>\n    </sl-card>\n  `,\n};",
+      "fileName": "card-with-header-body-and-footer-cc4aa930.stories.tsx"
+    }
+  ],
+  "currentVersionId": "509326437a4c5c35"
+}

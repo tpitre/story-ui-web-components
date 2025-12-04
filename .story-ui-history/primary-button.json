@@ -1,0 +1,14 @@
+{
+  "storyId": "primary-button",
+  "title": "Primary Button",
+  "versions": [
+    {
+      "id": "aa6138b6582c304f",
+      "timestamp": 1764704461101,
+      "prompt": "Create a simple Shoelace button with primary variant",
+      "code": "import React from 'react';\nimport { html } from 'lit';\nimport type { Meta, StoryObj } from '@storybook/web-components';\nimport '@shoelace-style/shoelace/components/button/button.js';\n\nconst meta: Meta = {\n  title: 'Generated/Simple Button',\n  tags: ['autodocs'],\n  parameters: { layout: 'centered' },\n};\n\nexport default meta;\ntype Story = StoryObj;\n\nexport const Primary: Story = {\n  render: () => html`\n    <sl-button variant=\"primary\">\n      Click Me\n    </sl-button>\n  `,\n};",
+      "fileName": "primary-button-65989d6c.stories.tsx"
+    }
+  ],
+  "currentVersionId": "aa6138b6582c304f"
+}
