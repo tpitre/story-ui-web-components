@@ -11,10 +11,10 @@ RUN apt-get update && apt-get install -y \
     wget \
     && rm -rf /var/lib/apt/lists/*
 
-# Copy package files
-COPY package*.json ./
+# Copy package.json only (not package-lock.json to avoid platform-specific rollup issues)
+COPY package.json ./
 
-# Install dependencies
+# Install dependencies fresh (npm creates appropriate lock for Linux platform)
 RUN npm install
 
 # Copy source
