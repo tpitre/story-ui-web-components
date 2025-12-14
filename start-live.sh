@@ -15,45 +15,18 @@ echo "📖 Starting Storybook dev server on internal port ${STORYBOOK_PORT}..."
 npm run storybook -- --port "$STORYBOOK_PORT" --host 0.0.0.0 --ci --no-open &
 STORYBOOK_PID=$!
 
-# Wait for Storybook to initialize with HTTP readiness check
-# Web Components/Shoelace requires more startup time due to custom-elements.json parsing
-# Increased timeout for Railway's slower infrastructure
-echo "⏳ Waiting for Storybook to start (may take up to 90 seconds on Railway)..."
+# Wait for Storybook to initialize
+# Using simple sleep approach (same as React Mantine which works reliably)
+echo "⏳ Waiting for Storybook to start..."
+sleep 15
 
-STORYBOOK_READY=false
-MAX_WAIT=90
-WAIT_COUNT=0
-
-while [ $WAIT_COUNT -lt $MAX_WAIT ]; do
-    # Check if process is still alive
-    if ! kill -0 $STORYBOOK_PID 2>/dev/null; then
-        echo "❌ Storybook process crashed during startup"
-        exit 1
-    fi
-
-    # Check if Storybook is actually responding to HTTP requests
-    # Using wget instead of curl (curl is not installed in the container)
-    if wget -q --spider http://localhost:$STORYBOOK_PORT 2>/dev/null; then
-        STORYBOOK_READY=true
-        break
-    fi
-
-    # Progress indicator every 10 seconds
-    if [ $((WAIT_COUNT % 10)) -eq 0 ] && [ $WAIT_COUNT -gt 0 ]; then
-        echo "   Still waiting... ${WAIT_COUNT}s elapsed"
-    fi
-
-    sleep 1
-    WAIT_COUNT=$((WAIT_COUNT + 1))
-done
-
-if [ "$STORYBOOK_READY" = false ]; then
-    echo "❌ Storybook failed to become ready within ${MAX_WAIT} seconds"
-    kill $STORYBOOK_PID 2>/dev/null
+# Verify Storybook is running
+if ! kill -0 $STORYBOOK_PID 2>/dev/null; then
+    echo "❌ Storybook failed to start"
     exit 1
 fi
 
-echo "✅ Storybook dev server running and responding on port ${STORYBOOK_PORT} (took ${WAIT_COUNT}s)"
+echo "✅ Storybook dev server running on port ${STORYBOOK_PORT}"
 
 # Set environment variables for Storybook proxy
 export STORYBOOK_PROXY_PORT=$STORYBOOK_PORT
