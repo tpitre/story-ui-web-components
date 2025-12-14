@@ -1,12 +1,12 @@
 [
   {
     "title": "Primary Button",
-    "fileName": "primary-button-65989d6c.stories.tsx",
-    "storyId": "story-65989d6c",
-    "hash": "65989d6c",
+    "fileName": "primary-button-a62f4f5a.stories.ts",
+    "storyId": "story-a62f4f5a",
+    "hash": "a62f4f5a",
     "createdAt": "2025-12-02T19:41:01.100Z",
-    "updatedAt": "2025-12-02T19:41:01.100Z",
-    "prompt": "Create a simple Shoelace button with primary variant"
+    "updatedAt": "2025-12-13T23:39:18.135Z",
+    "prompt": "Add a loading state to the button"
   },
   {
     "title": "Primary Button - Shoelace",

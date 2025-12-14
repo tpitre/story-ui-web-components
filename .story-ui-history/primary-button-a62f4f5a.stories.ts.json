@@ -1,0 +1,22 @@
+{
+  "storyId": "primary-button-a62f4f5a.stories.ts",
+  "title": "Primary Button A62f4f5a.Stories.Ts",
+  "versions": [
+    {
+      "id": "4b45e072b2bcb4f2",
+      "timestamp": 1765669112574,
+      "prompt": "Simple Shoelace button with primary variant",
+      "code": "import { html } from 'lit';\nimport type { Meta, StoryObj } from '@storybook/web-components';\nimport '@shoelace-style/shoelace/dist/components/button/button.js';\n\nconst meta: Meta = {\n  title: 'Generated/Primary Button',\n  tags: ['autodocs'],\n  parameters: { layout: 'centered' },\n  argTypes: {\n    variant: {\n      control: 'select',\n      options: ['default', 'primary', 'success', 'neutral', 'warning', 'danger', 'text'],\n    },\n    size: {\n      control: 'select',\n      options: ['small', 'medium', 'large'],\n    },\n  },\n};\n\nexport default meta;\ntype Story = StoryObj;\n\nexport const Primary: Story = {\n  args: {\n    variant: 'primary',\n    size: 'medium',\n  },\n  render: (args) => html`\n    <sl-button variant=${args.variant} size=${args.size}>\n      Primary Button\n    </sl-button>\n  `,\n};\n\nexport const Small: Story = {\n  render: () => html`\n    <sl-button variant=\"primary\" size=\"small\">\n      Small Primary\n    </sl-button>\n  `,\n};\n\nexport const Large: Story = {\n  render: () => html`\n    <sl-button variant=\"primary\" size=\"large\">\n      Large Primary\n    </sl-button>\n  `,\n};\n\nexport const WithIcon: Story = {\n  render: () => html`\n    <sl-button variant=\"primary\">\n      <sl-icon slot=\"prefix\" name=\"heart\"></sl-icon>\n      Primary with Icon\n    </sl-button>\n  `,\n};",
+      "fileName": "primary-button-a62f4f5a.stories.ts"
+    },
+    {
+      "id": "f0e029fd7ee3a577",
+      "timestamp": 1765669158135,
+      "prompt": "Add a loading state to the button",
+      "code": "import { html } from 'lit';\nimport type { Meta, StoryObj } from '@storybook/web-components';\nimport '@shoelace-style/shoelace/dist/components/button/button.js';\n\nconst meta: Meta = {\n  title: 'Generated/Primary Button',\n  tags: ['autodocs'],\n  parameters: { layout: 'centered' },\n  argTypes: {\n    variant: {\n      control: 'select',\n      options: ['default', 'primary', 'success', 'neutral', 'warning', 'danger', 'text'],\n    },\n    size: {\n      control: 'select',\n      options: ['small', 'medium', 'large'],\n    },\n  },\n};\n\nexport default meta;\ntype Story = StoryObj;\n\nexport const Primary: Story = {\n  args: {\n    variant: 'primary',\n    size: 'medium',\n  },\n  render: (args) => html`\n    <sl-button variant=${args.variant} size=${args.size}>\n      Primary Button\n    </sl-button>\n  `,\n};\n\nexport const Small: Story = {\n  render: () => html`\n    <sl-button variant=\"primary\" size=\"small\">\n      Small Primary\n    </sl-button>\n  `,\n};\n\nexport const Large: Story = {\n  render: () => html`\n    <sl-button variant=\"primary\" size=\"large\">\n      Large Primary\n    </sl-button>\n  `,\n};\n\nexport const WithIcon: Story = {\n  render: () => html`\n    <sl-button variant=\"primary\">\n      <sl-icon slot=\"prefix\" name=\"heart\"></sl-icon>\n      Primary with Icon\n    </sl-button>\n  `,\n};\n\nexport const Loading: Story = {\n  render: () => html`\n    <sl-button variant=\"primary\" loading>\n      Loading Button\n    </sl-button>\n  `,\n};",
+      "fileName": "primary-button-a62f4f5a.stories.ts",
+      "parentId": "4b45e072b2bcb4f2"
+    }
+  ],
+  "currentVersionId": "f0e029fd7ee3a577"
+}

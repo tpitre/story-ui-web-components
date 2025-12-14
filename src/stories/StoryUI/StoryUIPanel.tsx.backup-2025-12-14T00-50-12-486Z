@@ -720,7 +720,7 @@ const ProgressIndicator: React.FC<ProgressIndicatorProps> = ({ streamingState })
         {completion.metrics && (
           <div className="sui-completion-metrics">
             <span>{(completion.metrics.totalTimeMs / 1000).toFixed(1)}s</span>
-            <span>{completion.metrics.llmCallsCount} {completion.metrics.llmCallsCount === 1 ? 'generation' : 'generations'}</span>
+            <span>{completion.metrics.llmCallsCount} LLM calls</span>
           </div>
         )}
       </div>
@@ -729,7 +729,7 @@ const ProgressIndicator: React.FC<ProgressIndicatorProps> = ({ streamingState })
   return (
     <div className="sui-progress" role="progressbar" aria-valuenow={progress?.step} aria-valuemax={progress?.totalSteps}>
       <div className="sui-progress-header">
-        <span className="sui-progress-label">{progress?.message || 'Please give us a moment while we generate your story...'}</span>
+        <span className="sui-progress-label">{progress?.message || 'Generating story...'}</span>
         {progress && <span className="sui-progress-step">{progress.step}/{progress.totalSteps}</span>}
       </div>
       {progress && (
@@ -1091,7 +1091,7 @@ function StoryUIPanel({ mcpPort }: StoryUIPanelProps) {
       parts.push(`\n\n[TIP] **Tip:** ${completion.suggestions[0]}`);
     }
     if (!isUpdate && !hasShownRefreshHint.current) {
-      parts.push(isEdgeMode() ? `\n\n_Story saved to cloud._` : `\n\n_Storybook will auto-refresh in 2 seconds to register the new story..._`);
+      parts.push(isEdgeMode() ? `\n\n_Story saved to cloud._` : `\n\n_Might need to refresh Storybook (Cmd/Ctrl + R) to see new stories._`);
       hasShownRefreshHint.current = true;
     }
     if (completion.metrics?.totalTimeMs) {
@@ -1100,84 +1100,24 @@ function StoryUIPanel({ mcpPort }: StoryUIPanelProps) {
     return parts.join('');
   };
 
-  /**
-   * Trigger a Storybook refresh to fix Vite HMR issues with new story files.
-   * This is a workaround for the known Storybook + Vite bug where new story files
-   * aren't properly registered in Vite's import map until a page refresh.
-   * See: https://github.com/storybookjs/storybook/issues/30431
-   */
-  const triggerStorybookRefresh = useCallback((storyTitle: string, delayMs: number = 2000) => {
-    // Only refresh for new stories (not updates) to avoid disrupting workflow
-    console.log(`[Story UI] Scheduling Storybook refresh in ${delayMs}ms for new story: ${storyTitle}`);
-
-    setTimeout(() => {
-      try {
-        // Try to refresh the parent Storybook frame
-        if (window.top && window.top !== window) {
-          console.log('[Story UI] Refreshing Storybook to register new story file...');
-          window.top.location.reload();
-        } else if (window.parent && window.parent !== window) {
-          console.log('[Story UI] Refreshing parent frame...');
-          window.parent.location.reload();
-        } else {
-          // Fallback: refresh current window
-          console.log('[Story UI] Refreshing current window...');
-          window.location.reload();
-        }
-      } catch (error) {
-        // Cross-origin restrictions may prevent programmatic refresh
-        console.warn('[Story UI] Could not auto-refresh Storybook. Please refresh manually (Cmd/Ctrl + R).');
-      }
-    }, delayMs);
-  }, []);
-
   // Finalize streaming
   const finalizeStreamingConversation = useCallback((newConversation: Message[], completion: CompletionFeedback, userInput: string) => {
-    // DEBUG: Trace completion data
-    console.log('[StoryUI DEBUG] finalizeStreamingConversation completion:', {
-      storyId: completion.storyId,
-      fileName: completion.fileName,
-      title: completion.title,
-      action: completion.summary?.action,
-    });
-
     const isUpdate = completion.summary.action === 'updated';
     const responseMessage = buildConversationalResponse(completion, isUpdate);
     const aiMsg: Message = { role: 'ai', content: responseMessage };
     const updatedConversation = [...newConversation, aiMsg];
     dispatch({ type: 'SET_CONVERSATION', payload: updatedConversation });
     const isExistingSession = state.activeChatId && state.conversation.length > 0;
-    // DEBUG: Trace session detection
-    console.log('[StoryUI DEBUG] isExistingSession check:', {
-      activeChatId: state.activeChatId,
-      conversationLength: state.conversation.length,
-      isExistingSession,
-    });
-
     if (isExistingSession && state.activeChatId) {
-      // Load existing session to preserve fileName if completion doesn't include it
-      // This fixes the bug where iterations would corrupt fileName with storyId
-      const chats = loadChats();
-      const chatIndex = chats.findIndex(c => c.id === state.activeChatId);
-      const existingFileName = chatIndex !== -1 ? chats[chatIndex].fileName : '';
-
       const updatedSession: ChatSession = {
         id: state.activeChatId,
         title: state.activeTitle,
-        // Use completion.fileName if provided, otherwise preserve existing fileName
-        // NEVER fall back to storyId (activeChatId) as that corrupts the fileName
-        fileName: completion.fileName || existingFileName || '',
+        fileName: completion.fileName || state.activeChatId,
         conversation: updatedConversation,
         lastUpdated: Date.now(),
       };
-      // DEBUG: Trace what's being saved for UPDATE
-      console.log('[StoryUI DEBUG] Saving UPDATED session:', {
-        id: updatedSession.id,
-        title: updatedSession.title,
-        fileName: updatedSession.fileName,
-        completionFileName: completion.fileName,
-        existingFileName,
-      });
+      const chats = loadChats();
+      const chatIndex = chats.findIndex(c => c.id === state.activeChatId);
       if (chatIndex !== -1) chats[chatIndex] = updatedSession;
       saveChats(chats);
       dispatch({ type: 'SET_RECENT_CHATS', payload: chats });
@@ -1192,25 +1132,13 @@ function StoryUIPanel({ mcpPort }: StoryUIPanelProps) {
         conversation: updatedConversation,
         lastUpdated: Date.now(),
       };
-      // DEBUG: Trace what's being saved
-      console.log('[StoryUI DEBUG] Saving NEW session:', {
-        id: newSession.id,
-        title: newSession.title,
-        fileName: newSession.fileName,
-      });
       const chats = loadChats().filter(c => c.id !== chatId);
       chats.unshift(newSession);
       if (chats.length > MAX_RECENT_CHATS) chats.splice(MAX_RECENT_CHATS);
       saveChats(chats);
       dispatch({ type: 'SET_RECENT_CHATS', payload: chats });
-
-      // Auto-refresh Storybook for NEW stories to fix Vite HMR import map issue
-      // This fixes the "importers[path] is not a function" error
-      if (completion.success && completion.title) {
-        triggerStorybookRefresh(completion.title);
-      }
     }
-  }, [state.activeChatId, state.activeTitle, state.conversation.length, triggerStorybookRefresh]);
+  }, [state.activeChatId, state.activeTitle, state.conversation.length]);
 
   // Handle send
   const handleSend = async (e?: React.FormEvent) => {
@@ -1239,58 +1167,30 @@ function StoryUIPanel({ mcpPort }: StoryUIPanelProps) {
     dispatch({ type: 'SET_INPUT', payload: '' });
     clearAttachedImages();
 
-    // Get the actual fileName from localStorage (not React state which may be stale)
-    // This ensures updates overwrite the correct file instead of creating duplicates
-    const freshChats = loadChats();
-    const activeChat = freshChats.find(c => c.id === state.activeChatId);
-    const activeFileName = activeChat?.fileName || undefined;
-
-    // DEBUG: Trace fileName lookup for iteration bug
-    console.log('[StoryUI DEBUG] handleSend fileName lookup:', {
-      activeChatId: state.activeChatId,
-      freshChatsCount: freshChats.length,
-      freshChatsIds: freshChats.map(c => c.id),
-      foundChat: activeChat ? { id: activeChat.id, fileName: activeChat.fileName } : null,
-      activeFileName,
-    });
-
     if (USE_STREAMING) {
       try {
         if (abortControllerRef.current) abortControllerRef.current.abort();
         abortControllerRef.current = new AbortController();
         dispatch({ type: 'SET_STREAMING_STATE', payload: {} });
-        // DEBUG: Log exact request body before sending
-        const requestBody = {
-          prompt: userInput,
-          conversation: newConversation,
-          fileName: activeFileName,
-          isUpdate: state.activeChatId && state.conversation.length > 0,
-          originalTitle: state.activeTitle || undefined,
-          storyId: state.activeChatId || undefined,
-          _debug: {
-            activeChatId: state.activeChatId,
-            freshChatsCount: freshChats.length,
-            foundChatFileName: activeChat?.fileName,
-            activeFileName,
-          },
-          images: hasImages
-            ? imagesToSend.map(img => ({ type: 'base64' as const, data: img.base64, mediaType: img.file.type }))
-            : undefined,
-          visionMode: hasImages ? 'screenshot_to_story' : undefined,
-          provider: state.selectedProvider || undefined,
-          model: state.selectedModel || undefined,
-          considerations: state.considerations || undefined,
-        };
-        console.log('[StoryUI DEBUG] Request body being sent:', {
-          fileName: requestBody.fileName,
-          storyId: requestBody.storyId,
-          isUpdate: requestBody.isUpdate,
-          activeChatId: state.activeChatId,
-        });
+        const imagePayload = hasImages
+          ? imagesToSend.map(img => ({ type: 'base64' as const, data: img.base64, mediaType: img.file.type }))
+          : undefined;
         const response = await fetch(MCP_STREAM_API, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(requestBody),
+          body: JSON.stringify({
+            prompt: userInput,
+            conversation: newConversation,
+            fileName: state.activeChatId || undefined,
+            isUpdate: state.activeChatId && state.conversation.length > 0,
+            originalTitle: state.activeTitle || undefined,
+            storyId: state.activeChatId || undefined,
+            images: imagePayload,
+            visionMode: hasImages ? 'screenshot_to_story' : undefined,
+            provider: state.selectedProvider || undefined,
+            model: state.selectedModel || undefined,
+            considerations: state.considerations || undefined,
+          }),
           signal: abortControllerRef.current.signal,
         });
         if (!response.ok) throw new Error(`Streaming request failed: ${response.status}`);
@@ -1356,10 +1256,7 @@ function StoryUIPanel({ mcpPort }: StoryUIPanelProps) {
             body: JSON.stringify({
               prompt: userInput,
               conversation: newConversation,
-              fileName: activeFileName,
-              isUpdate: state.activeChatId && state.conversation.length > 0,
-              originalTitle: state.activeTitle || undefined,
-              storyId: state.activeChatId || undefined,
+              fileName: state.activeChatId || undefined,
               provider: state.selectedProvider || undefined,
               model: state.selectedModel || undefined,
               considerations: state.considerations || undefined,
@@ -1724,7 +1621,7 @@ function StoryUIPanel({ mcpPort }: StoryUIPanelProps) {
                 <div className="sui-message sui-message-ai">
                   {state.streamingState ? <ProgressIndicator streamingState={state.streamingState} /> : (
                     <div className="sui-progress">
-                      <span className="sui-progress-label">Please give us a moment while we generate your story<span className="sui-loading" /></span>
+                      <span className="sui-progress-label">Generating story<span className="sui-loading" /></span>
                     </div>
                   )}
                 </div>
