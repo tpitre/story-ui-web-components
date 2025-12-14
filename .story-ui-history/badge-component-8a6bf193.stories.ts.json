@@ -1,0 +1,14 @@
+{
+  "storyId": "badge-component-8a6bf193.stories.ts",
+  "title": "Badge Component 8a6bf193.Stories.Ts",
+  "versions": [
+    {
+      "id": "880ccabf9ea1ad5b",
+      "timestamp": 1765681757177,
+      "prompt": "Create a badge component",
+      "code": "import { html } from 'lit';\nimport type { Meta, StoryObj } from '@storybook/web-components';\nimport '@shoelace-style/shoelace/dist/components/badge/badge.js';\n\nconst meta: Meta = {\n  title: 'Generated/Badge Component',\n  tags: ['autodocs'],\n  parameters: { layout: 'centered' },\n  argTypes: {\n    variant: {\n      control: 'select',\n      options: ['primary', 'success', 'neutral', 'warning', 'danger'],\n    },\n    pill: {\n      control: 'boolean',\n    },\n    pulse: {\n      control: 'boolean',\n    },\n  },\n};\n\nexport default meta;\ntype Story = StoryObj;\n\nexport const Default: Story = {\n  args: {\n    variant: 'primary',\n  },\n  render: (args) => html`\n    <sl-badge variant=${args.variant}>Badge</sl-badge>\n  `,\n};\n\nexport const Variants: Story = {\n  render: () => html`\n    <div style=\"display: flex; gap: 1rem; flex-wrap: wrap; align-items: center;\">\n      <sl-badge variant=\"primary\">Primary</sl-badge>\n      <sl-badge variant=\"success\">Success</sl-badge>\n      <sl-badge variant=\"neutral\">Neutral</sl-badge>\n      <sl-badge variant=\"warning\">Warning</sl-badge>\n      <sl-badge variant=\"danger\">Danger</sl-badge>\n    </div>\n  `,\n};\n\nexport const Pill: Story = {\n  render: () => html`\n    <div style=\"display: flex; gap: 1rem; flex-wrap: wrap; align-items: center;\">\n      <sl-badge variant=\"primary\" pill>Primary</sl-badge>\n      <sl-badge variant=\"success\" pill>Success</sl-badge>\n      <sl-badge variant=\"neutral\" pill>Neutral</sl-badge>\n      <sl-badge variant=\"warning\" pill>Warning</sl-badge>\n      <sl-badge variant=\"danger\" pill>Danger</sl-badge>\n    </div>\n  `,\n};\n\nexport const Pulse: Story = {\n  render: () => html`\n    <div style=\"display: flex; gap: 1rem; flex-wrap: wrap; align-items: center;\">\n      <sl-badge variant=\"primary\" pulse>1</sl-badge>\n      <sl-badge variant=\"success\" pulse>2</sl-badge>\n      <sl-badge variant=\"neutral\" pulse>3</sl-badge>\n      <sl-badge variant=\"warning\" pulse>4</sl-badge>\n      <sl-badge variant=\"danger\" pulse>5</sl-badge>\n    </div>\n  `,\n};\n\nexport const Numbers: Story = {\n  render: () => html`\n    <div style=\"display: flex; gap: 1rem; flex-wrap: wrap; align-items: center;\">\n      <sl-badge variant=\"primary\">1</sl-badge>\n      <sl-badge variant=\"success\">12</sl-badge>\n      <sl-badge variant=\"neutral\">99+</sl-badge>\n      <sl-badge variant=\"warning\">NEW</sl-badge>\n      <sl-badge variant=\"danger\" pill>Hot</sl-badge>\n    </div>\n  `,\n};",
+      "fileName": "badge-component-8a6bf193.stories.ts"
+    }
+  ],
+  "currentVersionId": "880ccabf9ea1ad5b"
+}

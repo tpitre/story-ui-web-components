@@ -1,0 +1,14 @@
+{
+  "storyId": "checkbox-component-028560ae.stories.ts",
+  "title": "Checkbox Component 028560ae.Stories.Ts",
+  "versions": [
+    {
+      "id": "4734e5a820902a82",
+      "timestamp": 1765681739493,
+      "prompt": "Create a checkbox component",
+      "code": "import { html } from 'lit';\nimport type { Meta, StoryObj } from '@storybook/web-components';\nimport '@shoelace-style/shoelace/dist/components/checkbox/checkbox.js';\n\nconst meta: Meta = {\n  title: 'Generated/Checkbox Component',\n  tags: ['autodocs'],\n  parameters: { layout: 'centered' },\n  argTypes: {\n    checked: {\n      control: 'boolean',\n    },\n    disabled: {\n      control: 'boolean',\n    },\n    indeterminate: {\n      control: 'boolean',\n    },\n  },\n};\n\nexport default meta;\ntype Story = StoryObj;\n\nexport const Default: Story = {\n  args: {\n    checked: false,\n    disabled: false,\n  },\n  render: (args) => html`\n    <sl-checkbox\n      ?checked=${args.checked}\n      ?disabled=${args.disabled}\n    >\n      Checkbox\n    </sl-checkbox>\n  `,\n};\n\nexport const Checked: Story = {\n  render: () => html`\n    <sl-checkbox checked>I agree to the terms and conditions</sl-checkbox>\n  `,\n};\n\nexport const Disabled: Story = {\n  render: () => html`\n    <div style=\"display: flex; flex-direction: column; gap: 1rem;\">\n      <sl-checkbox disabled>Disabled unchecked</sl-checkbox>\n      <sl-checkbox checked disabled>Disabled checked</sl-checkbox>\n    </div>\n  `,\n};\n\nexport const Indeterminate: Story = {\n  render: () => html`\n    <sl-checkbox indeterminate>Indeterminate state</sl-checkbox>\n  `,\n};\n\nexport const Group: Story = {\n  render: () => html`\n    <div style=\"display: flex; flex-direction: column; gap: 0.75rem;\">\n      <strong>Select your preferences:</strong>\n      <sl-checkbox>Email notifications</sl-checkbox>\n      <sl-checkbox>SMS notifications</sl-checkbox>\n      <sl-checkbox checked>Push notifications</sl-checkbox>\n      <sl-checkbox>Newsletter subscription</sl-checkbox>\n    </div>\n  `,\n};\n\nexport const WithEventHandler: Story = {\n  render: () => html`\n    <sl-checkbox\n      @sl-change=${(e: CustomEvent) => {\n        const checkbox = e.target as any;\n        console.log('Checkbox changed:', checkbox.checked);\n        alert(`Checkbox is now ${checkbox.checked ? 'checked' : 'unchecked'}`);\n      }}\n    >\n      Click me and check the console\n    </sl-checkbox>\n  `,\n};",
+      "fileName": "checkbox-component-028560ae.stories.ts"
+    }
+  ],
+  "currentVersionId": "4734e5a820902a82"
+}

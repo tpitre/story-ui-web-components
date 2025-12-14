@@ -1,0 +1,14 @@
+{
+  "storyId": "spinner-loading-e56be564.stories.ts",
+  "title": "Spinner Loading E56be564.Stories.Ts",
+  "versions": [
+    {
+      "id": "cbc71b0010116468",
+      "timestamp": 1765681701340,
+      "prompt": "Create a spinner loading",
+      "code": "import { html } from 'lit';\nimport type { Meta, StoryObj } from '@storybook/web-components';\nimport '@shoelace-style/shoelace/dist/components/spinner/spinner.js';\nimport '@shoelace-style/shoelace/dist/components/card/card.js';\n\nconst meta: Meta = {\n  title: 'Generated/Spinner Loading',\n  tags: ['autodocs'],\n  parameters: { layout: 'centered' },\n  argTypes: {\n    size: {\n      control: 'text',\n      description: 'The size of the spinner',\n    },\n  },\n};\n\nexport default meta;\ntype Story = StoryObj;\n\nexport const Default: Story = {\n  render: () => html`<sl-spinner></sl-spinner>`,\n};\n\nexport const Small: Story = {\n  render: () => html`<sl-spinner style=\"font-size: 1rem;\"></sl-spinner>`,\n};\n\nexport const Medium: Story = {\n  render: () => html`<sl-spinner style=\"font-size: 2rem;\"></sl-spinner>`,\n};\n\nexport const Large: Story = {\n  render: () => html`<sl-spinner style=\"font-size: 3rem;\"></sl-spinner>`,\n};\n\nexport const ExtraLarge: Story = {\n  render: () => html`<sl-spinner style=\"font-size: 5rem;\"></sl-spinner>`,\n};\n\nexport const CustomColor: Story = {\n  render: () => html`\n    <sl-spinner style=\"font-size: 3rem; --indicator-color: deeppink; --track-color: pink;\"></sl-spinner>\n  `,\n};\n\nexport const LoadingCard: Story = {\n  render: () => html`\n    <sl-card style=\"width: 300px; text-align: center;\">\n      <div slot=\"header\">Loading Content</div>\n      <div style=\"padding: 2rem;\">\n        <sl-spinner style=\"font-size: 3rem;\"></sl-spinner>\n        <p style=\"margin-top: 1rem; color: var(--sl-color-neutral-600);\">\n          Please wait while we load your data...\n        </p>\n      </div>\n    </sl-card>\n  `,\n};\n\nexport const MultipleSpinners: Story = {\n  render: () => html`\n    <div style=\"display: flex; gap: 2rem; align-items: center;\">\n      <sl-spinner style=\"font-size: 1rem;\"></sl-spinner>\n      <sl-spinner style=\"font-size: 2rem;\"></sl-spinner>\n      <sl-spinner style=\"font-size: 3rem;\"></sl-spinner>\n      <sl-spinner style=\"font-size: 4rem;\"></sl-spinner>\n    </div>\n  `,\n};",
+      "fileName": "spinner-loading-e56be564.stories.ts"
+    }
+  ],
+  "currentVersionId": "cbc71b0010116468"
+}
