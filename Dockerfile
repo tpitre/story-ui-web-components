@@ -1,5 +1,6 @@
 # Story UI - Web Components Storybook Deployment
 # Runs Storybook in DEV MODE with MCP server for dynamic story generation
+# Build timestamp: 2025-12-14T06:35:00Z (force rebuild)
 
 FROM node:20-slim
 
