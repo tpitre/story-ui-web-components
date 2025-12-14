@@ -17,8 +17,9 @@ STORYBOOK_PID=$!
 
 # Wait for Storybook to initialize
 # Using simple sleep approach (same as React Mantine which works reliably)
+# Web Components/Shoelace may need slightly more time than React
 echo "⏳ Waiting for Storybook to start..."
-sleep 15
+sleep 20
 
 # Verify Storybook is running
 if ! kill -0 $STORYBOOK_PID 2>/dev/null; then
