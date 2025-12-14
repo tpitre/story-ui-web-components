@@ -43,5 +43,95 @@
     "createdAt": "2025-12-03T04:36:15.909Z",
     "updatedAt": "2025-12-03T04:36:15.909Z",
     "prompt": "Create a simple card component using sl-card with a header, body content, and a footer with a button"
+  },
+  {
+    "title": "Button Variants",
+    "fileName": "button-variants-370ab40f.stories.ts",
+    "storyId": "story-370ab40f",
+    "hash": "370ab40f",
+    "createdAt": "2025-12-14T03:05:43.125Z",
+    "updatedAt": "2025-12-14T03:05:43.125Z",
+    "prompt": "Create a button with different variants"
+  },
+  {
+    "title": "Card Component",
+    "fileName": "card-component-a6e48ab5.stories.ts",
+    "storyId": "story-a6e48ab5",
+    "hash": "a6e48ab5",
+    "createdAt": "2025-12-14T03:06:11.072Z",
+    "updatedAt": "2025-12-14T03:06:11.072Z",
+    "prompt": "Create a card component"
+  },
+  {
+    "title": "Alert Notification",
+    "fileName": "alert-notification-da550594.stories.ts",
+    "storyId": "story-da550594",
+    "hash": "da550594",
+    "createdAt": "2025-12-14T03:06:34.007Z",
+    "updatedAt": "2025-12-14T03:06:34.007Z",
+    "prompt": "Create an alert notification"
+  },
+  {
+    "title": "Dialog Modal",
+    "fileName": "dialog-modal-deb52455.stories.ts",
+    "storyId": "story-deb52455",
+    "hash": "deb52455",
+    "createdAt": "2025-12-14T03:07:00.462Z",
+    "updatedAt": "2025-12-14T03:07:00.462Z",
+    "prompt": "Create a dialog modal"
+  },
+  {
+    "title": "Tab Group",
+    "fileName": "tab-group-94882899.stories.ts",
+    "storyId": "story-94882899",
+    "hash": "94882899",
+    "createdAt": "2025-12-14T03:07:28.974Z",
+    "updatedAt": "2025-12-14T03:07:28.974Z",
+    "prompt": "Create a tab group"
+  },
+  {
+    "title": "Dropdown Menu",
+    "fileName": "dropdown-menu-62e084b2.stories.ts",
+    "storyId": "story-62e084b2",
+    "hash": "62e084b2",
+    "createdAt": "2025-12-14T03:08:03.034Z",
+    "updatedAt": "2025-12-14T03:08:03.034Z",
+    "prompt": "Create a dropdown menu"
+  },
+  {
+    "title": "Spinner Loading",
+    "fileName": "spinner-loading-e56be564.stories.ts",
+    "storyId": "story-e56be564",
+    "hash": "e56be564",
+    "createdAt": "2025-12-14T03:08:21.340Z",
+    "updatedAt": "2025-12-14T03:08:21.340Z",
+    "prompt": "Create a spinner loading"
+  },
+  {
+    "title": "Input Field",
+    "fileName": "input-field-7a8c9f5d.stories.ts",
+    "storyId": "story-7a8c9f5d",
+    "hash": "7a8c9f5d",
+    "createdAt": "2025-12-14T03:08:42.224Z",
+    "updatedAt": "2025-12-14T03:08:42.224Z",
+    "prompt": "Create an input field"
+  },
+  {
+    "title": "Checkbox Component",
+    "fileName": "checkbox-component-028560ae.stories.ts",
+    "storyId": "story-028560ae",
+    "hash": "028560ae",
+    "createdAt": "2025-12-14T03:08:59.493Z",
+    "updatedAt": "2025-12-14T03:08:59.493Z",
+    "prompt": "Create a checkbox component"
+  },
+  {
+    "title": "Badge Component",
+    "fileName": "badge-component-8a6bf193.stories.ts",
+    "storyId": "story-8a6bf193",
+    "hash": "8a6bf193",
+    "createdAt": "2025-12-14T03:09:17.177Z",
+    "updatedAt": "2025-12-14T03:09:17.177Z",
+    "prompt": "Create a badge component"
   }
 ]

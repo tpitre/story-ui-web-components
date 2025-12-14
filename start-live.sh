@@ -15,17 +15,43 @@ echo "📖 Starting Storybook dev server on internal port ${STORYBOOK_PORT}..."
 npm run storybook -- --port "$STORYBOOK_PORT" --host 0.0.0.0 --ci --no-open &
 STORYBOOK_PID=$!
 
-# Wait for Storybook to initialize
-echo "⏳ Waiting for Storybook to start..."
-sleep 15
+# Wait for Storybook to initialize with HTTP readiness check
+# Web Components/Shoelace requires more startup time due to custom-elements.json parsing
+echo "⏳ Waiting for Storybook to start (Web Components may take up to 60 seconds)..."
 
-# Verify Storybook is running
-if ! kill -0 $STORYBOOK_PID 2>/dev/null; then
-    echo "❌ Storybook failed to start"
+STORYBOOK_READY=false
+MAX_WAIT=60
+WAIT_COUNT=0
+
+while [ $WAIT_COUNT -lt $MAX_WAIT ]; do
+    # Check if process is still alive
+    if ! kill -0 $STORYBOOK_PID 2>/dev/null; then
+        echo "❌ Storybook process crashed during startup"
+        exit 1
+    fi
+
+    # Check if Storybook is actually responding to HTTP requests
+    if curl -sf http://localhost:$STORYBOOK_PORT >/dev/null 2>&1; then
+        STORYBOOK_READY=true
+        break
+    fi
+
+    # Progress indicator every 10 seconds
+    if [ $((WAIT_COUNT % 10)) -eq 0 ] && [ $WAIT_COUNT -gt 0 ]; then
+        echo "   Still waiting... ${WAIT_COUNT}s elapsed"
+    fi
+
+    sleep 1
+    WAIT_COUNT=$((WAIT_COUNT + 1))
+done
+
+if [ "$STORYBOOK_READY" = false ]; then
+    echo "❌ Storybook failed to become ready within ${MAX_WAIT} seconds"
+    kill $STORYBOOK_PID 2>/dev/null
     exit 1
 fi
 
-echo "✅ Storybook dev server running on port ${STORYBOOK_PORT}"
+echo "✅ Storybook dev server running and responding on port ${STORYBOOK_PORT} (took ${WAIT_COUNT}s)"
 
 # Set environment variables for Storybook proxy
 export STORYBOOK_PROXY_PORT=$STORYBOOK_PORT
