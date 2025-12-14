@@ -20,7 +20,7 @@
     "@storybook/addon-a11y": "^10.1.2",
     "@storybook/addon-docs": "^10.1.2",
     "@storybook/web-components-vite": "^10.1.2",
-    "@tpitre/story-ui": "github:southleft/story-ui#4bccf643660a6ad21eb5515a5f486135dfb99075",
+    "@tpitre/story-ui": "github:southleft/story-ui#0472569386cad0955aa925a9de1038a80971bedb",
     "lit": "^3.3.1",
     "storybook": "^10.1.2"
   }
