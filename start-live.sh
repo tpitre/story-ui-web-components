@@ -32,7 +32,8 @@ while [ $WAIT_COUNT -lt $MAX_WAIT ]; do
     fi
 
     # Check if Storybook is actually responding to HTTP requests
-    if curl -sf http://localhost:$STORYBOOK_PORT >/dev/null 2>&1; then
+    # Using wget instead of curl (curl is not installed in the container)
+    if wget -q --spider http://localhost:$STORYBOOK_PORT 2>/dev/null; then
         STORYBOOK_READY=true
         break
     fi
