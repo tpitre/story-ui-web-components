@@ -10,6 +10,11 @@ echo ""
 STORYBOOK_PORT=6006
 MCP_PORT=${PORT:-4001}
 
+# Memory optimization for Railway containers
+# Increase max heap size and enable garbage collection optimization
+export NODE_OPTIONS="--max-old-space-size=512 --optimize_for_size --gc_interval=100"
+echo "📊 Node memory settings: $NODE_OPTIONS"
+
 # Start Storybook dev server in background
 echo "📖 Starting Storybook dev server on internal port ${STORYBOOK_PORT}..."
 npm run storybook -- --port "$STORYBOOK_PORT" --host 0.0.0.0 --ci --no-open &
