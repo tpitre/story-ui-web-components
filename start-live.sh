@@ -17,10 +17,11 @@ STORYBOOK_PID=$!
 
 # Wait for Storybook to initialize with HTTP readiness check
 # Web Components/Shoelace requires more startup time due to custom-elements.json parsing
-echo "⏳ Waiting for Storybook to start (Web Components may take up to 60 seconds)..."
+# Increased timeout for Railway's slower infrastructure
+echo "⏳ Waiting for Storybook to start (may take up to 90 seconds on Railway)..."
 
 STORYBOOK_READY=false
-MAX_WAIT=60
+MAX_WAIT=90
 WAIT_COUNT=0
 
 while [ $WAIT_COUNT -lt $MAX_WAIT ]; do
