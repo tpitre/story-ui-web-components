@@ -1,0 +1,14 @@
+{
+  "storyId": "shoelace-button-component-217ea945.stories.ts",
+  "title": "Shoelace Button Component 217ea945.Stories.Ts",
+  "versions": [
+    {
+      "id": "c4a7e89d796823e2",
+      "timestamp": 1765747855518,
+      "prompt": "Create a simple Shoelace button component",
+      "code": "import { html } from 'lit';\nimport type { Meta, StoryObj } from '@storybook/web-components';\nimport '@shoelace-style/shoelace/dist/components/button/button.js';\n\nconst meta: Meta = {\n  title: 'Generated/Shoelace Button Component (217ea945)',\n  tags: ['autodocs'],\n  parameters: { layout: 'centered' },\n  argTypes: {\n    variant: {\n      control: 'select',\n      options: ['default', 'primary', 'success', 'neutral', 'warning', 'danger', 'text'],\n    },\n    size: {\n      control: 'select',\n      options: ['small', 'medium', 'large'],\n    },\n    outline: {\n      control: 'boolean',\n    },\n    disabled: {\n      control: 'boolean',\n    },\n  },\n};\n\nexport default meta;\ntype Story = StoryObj;\n\nexport const Default: Story = {\n  args: {\n    variant: 'default',\n    size: 'medium',\n    outline: false,\n    disabled: false,\n  },\n  render: (args) => html`\n    <sl-button\n      variant=${args.variant}\n      size=${args.size}\n      ?outline=${args.outline}\n      ?disabled=${args.disabled}\n    >\n      Button\n    </sl-button>\n  `,\n};\n\nexport const Primary: Story = {\n  render: () => html`\n    <sl-button variant=\"primary\">Primary Button</sl-button>\n  `,\n};\n\nexport const Success: Story = {\n  render: () => html`\n    <sl-button variant=\"success\">Success Button</sl-button>\n  `,\n};\n\nexport const Danger: Story = {\n  render: () => html`\n    <sl-button variant=\"danger\">Danger Button</sl-button>\n  `,\n};\n\nexport const Outline: Story = {\n  render: () => html`\n    <sl-button variant=\"primary\" outline>Outline Button</sl-button>\n  `,\n};\n\nexport const Disabled: Story = {\n  render: () => html`\n    <sl-button variant=\"primary\" disabled>Disabled Button</sl-button>\n  `,\n};\n\nexport const Sizes: Story = {\n  render: () => html`\n    <div style=\"display: flex; gap: 1rem; align-items: center;\">\n      <sl-button size=\"small\">Small</sl-button>\n      <sl-button size=\"medium\">Medium</sl-button>\n      <sl-button size=\"large\">Large</sl-button>\n    </div>\n  `,\n};",
+      "fileName": "shoelace-button-component-217ea945.stories.ts"
+    }
+  ],
+  "currentVersionId": "c4a7e89d796823e2"
+}

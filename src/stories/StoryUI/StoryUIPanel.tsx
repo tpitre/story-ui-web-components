@@ -80,6 +80,7 @@ interface StyleChoice {
 
 interface CompletionFeedback {
   success: boolean;
+  isFallback?: boolean; // True when a fallback error placeholder was created
   storyId?: string;
   fileName?: string;
   title?: string;
@@ -293,6 +294,7 @@ function panelReducer(state: PanelState, action: PanelAction): PanelState {
 const USE_STREAMING = true;
 const MAX_RECENT_CHATS = 20;
 const CHAT_STORAGE_KEY = 'story-ui-chats';
+const PROVIDER_PREFS_KEY = 'story-ui-provider-prefs';
 const MAX_IMAGES = 4;
 const MAX_IMAGE_SIZE_MB = 20;
 
@@ -334,6 +336,7 @@ const MCP_API = `${API_BASE}/mcp/generate-story`;
 const MCP_STREAM_API = `${API_BASE}/mcp/generate-story-stream`;
 const PROVIDERS_API = `${API_BASE}/mcp/providers`;
 const STORIES_API = `${API_BASE}/story-ui/stories`;
+const ORPHAN_STORIES_API = `${API_BASE}/story-ui/orphan-stories`;
 const CONSIDERATIONS_API = `${API_BASE}/mcp/considerations`;
 
 function isEdgeMode(): boolean {
@@ -374,6 +377,29 @@ function saveChats(chats: ChatSession[]): void {
     localStorage.setItem(CHAT_STORAGE_KEY, JSON.stringify(chats));
   } catch (e) {
     console.error('Failed to save chats:', e);
+  }
+}
+
+interface ProviderPrefs {
+  provider: string;
+  model: string;
+}
+
+function loadProviderPrefs(): ProviderPrefs | null {
+  try {
+    const stored = localStorage.getItem(PROVIDER_PREFS_KEY);
+    if (stored) return JSON.parse(stored);
+  } catch (e) {
+    console.error('Failed to load provider preferences:', e);
+  }
+  return null;
+}
+
+function saveProviderPrefs(provider: string, model: string): void {
+  try {
+    localStorage.setItem(PROVIDER_PREFS_KEY, JSON.stringify({ provider, model }));
+  } catch (e) {
+    console.error('Failed to save provider preferences:', e);
   }
 }
 
@@ -704,12 +730,23 @@ const ProgressIndicator: React.FC<ProgressIndicatorProps> = ({ streamingState })
     );
   }
   if (completion) {
+    // Determine status icon and class based on success and fallback state
+    const isFallback = completion.isFallback === true;
+    const statusIcon = completion.success ? '\u2705' : (isFallback ? '\u26A0\uFE0F' : '\u274C');
+    const statusClass = completion.success ? '' : (isFallback ? 'sui-completion-fallback' : 'sui-completion-error');
+
     return (
-      <div className="sui-completion">
+      <div className={`sui-completion ${statusClass}`}>
         <div className="sui-completion-header">
-          <span>{completion.success ? '\u2705' : '\u274C'}</span>
+          <span>{statusIcon}</span>
           <span>{completion.summary.action}: {completion.title}</span>
         </div>
+        {isFallback && (
+          <div className="sui-completion-fallback-warning">
+            <strong>Error Placeholder Created</strong>
+            <p>Generation failed after retries. A placeholder story was saved that you may want to delete or regenerate.</p>
+          </div>
+        )}
         {completion.componentsUsed.length > 0 && (
           <div className="sui-completion-components">
             {completion.componentsUsed.map((comp, i) => (
@@ -755,6 +792,8 @@ function StoryUIPanel({ mcpPort }: StoryUIPanelProps) {
   const [contextMenuId, setContextMenuId] = useState<string | null>(null);
   const [renamingChatId, setRenamingChatId] = useState<string | null>(null);
   const [renameValue, setRenameValue] = useState('');
+  const [orphanCount, setOrphanCount] = useState<number>(0);
+  const [isDeletingOrphans, setIsDeletingOrphans] = useState<boolean>(false);
   const chatEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -891,8 +930,31 @@ function StoryUIPanel({ mcpPort }: StoryUIPanelProps) {
           const res = await fetch(PROVIDERS_API);
           if (res.ok) {
             const data: ProvidersResponse = await res.json();
-            dispatch({ type: 'SET_PROVIDERS', payload: data.providers.filter(p => p.configured) });
-            if (data.current) {
+            const configuredProviders = data.providers.filter(p => p.configured);
+            dispatch({ type: 'SET_PROVIDERS', payload: configuredProviders });
+
+            // Check for saved provider preferences first
+            const savedPrefs = loadProviderPrefs();
+            if (savedPrefs) {
+              // Verify saved provider is still configured
+              const savedProviderExists = configuredProviders.some(p => p.type === savedPrefs.provider);
+              if (savedProviderExists) {
+                dispatch({ type: 'SET_SELECTED_PROVIDER', payload: savedPrefs.provider });
+                // Verify saved model exists for this provider
+                const providerInfo = configuredProviders.find(p => p.type === savedPrefs.provider);
+                if (providerInfo?.models.includes(savedPrefs.model)) {
+                  dispatch({ type: 'SET_SELECTED_MODEL', payload: savedPrefs.model });
+                } else if (providerInfo?.models.length) {
+                  // Model no longer available, use first model of saved provider
+                  dispatch({ type: 'SET_SELECTED_MODEL', payload: providerInfo.models[0] });
+                }
+              } else if (data.current) {
+                // Saved provider no longer configured, fall back to server default
+                dispatch({ type: 'SET_SELECTED_PROVIDER', payload: data.current.provider.toLowerCase() });
+                dispatch({ type: 'SET_SELECTED_MODEL', payload: data.current.model });
+              }
+            } else if (data.current) {
+              // No saved preferences, use server default
               dispatch({ type: 'SET_SELECTED_PROVIDER', payload: data.current.provider.toLowerCase() });
               dispatch({ type: 'SET_SELECTED_MODEL', payload: data.current.model });
             }
@@ -930,6 +992,13 @@ function StoryUIPanel({ mcpPort }: StoryUIPanelProps) {
   useEffect(() => {
     chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [state.conversation, state.loading]);
+
+  // Save provider preferences when they change
+  useEffect(() => {
+    if (state.selectedProvider && state.selectedModel) {
+      saveProviderPrefs(state.selectedProvider, state.selectedModel);
+    }
+  }, [state.selectedProvider, state.selectedModel]);
 
   // File handling
   const fileToBase64 = (file: File): Promise<string> => {
@@ -1073,8 +1142,16 @@ function StoryUIPanel({ mcpPort }: StoryUIPanelProps) {
   // Build response message
   const buildConversationalResponse = (completion: CompletionFeedback, isUpdate: boolean): string => {
     const parts: string[] = [];
-    const statusMarker = completion.success ? '[SUCCESS]' : '[ERROR]';
-    parts.push(isUpdate ? `${statusMarker} **Updated: "${completion.title}"**` : `${statusMarker} **Created: "${completion.title}"**`);
+    const isFallback = completion.isFallback === true;
+    const statusMarker = completion.success ? '[SUCCESS]' : (isFallback ? '[WARNING]' : '[ERROR]');
+    // Show "Failed:" when success is false, otherwise "Created:" or "Updated:"
+    const actionWord = completion.success ? (isUpdate ? 'Updated' : 'Created') : (isFallback ? 'Placeholder' : 'Failed');
+    parts.push(`${statusMarker} **${actionWord}: "${completion.title}"**`);
+
+    // Add fallback-specific warning
+    if (isFallback) {
+      parts.push(`\n\n⚠️ **Generation failed** - An error placeholder was saved. You may want to delete this story and try again with a simpler request.`);
+    }
     const componentCount = completion.componentsUsed?.length || 0;
     if (componentCount > 0) {
       const names = completion.componentsUsed.slice(0, 5).map(c => `\`${c.name}\``).join(', ');
@@ -1135,6 +1212,7 @@ function StoryUIPanel({ mcpPort }: StoryUIPanelProps) {
   const finalizeStreamingConversation = useCallback((newConversation: Message[], completion: CompletionFeedback, userInput: string) => {
     // DEBUG: Trace completion data
     console.log('[StoryUI DEBUG] finalizeStreamingConversation completion:', {
+      success: completion.success,
       storyId: completion.storyId,
       fileName: completion.fileName,
       title: completion.title,
@@ -1182,7 +1260,9 @@ function StoryUIPanel({ mcpPort }: StoryUIPanelProps) {
       saveChats(chats);
       dispatch({ type: 'SET_RECENT_CHATS', payload: chats });
     } else {
-      const chatId = completion.storyId || completion.fileName || Date.now().toString();
+      // FIX: Use fileName as chat ID (not storyId) so delete endpoint can find the actual file
+      // storyId is like "story-a1b2c3d4" but fileName is "Button-a1b2c3d4.stories.tsx"
+      const chatId = completion.fileName || completion.storyId || Date.now().toString();
       const chatTitle = completion.title || userInput;
       dispatch({ type: 'SET_ACTIVE_CHAT', payload: { id: chatId, title: chatTitle } });
       const newSession: ChatSession = {
@@ -1415,6 +1495,62 @@ function StoryUIPanel({ mcpPort }: StoryUIPanelProps) {
     }
   };
 
+  // Check for orphan stories (stories without associated chats)
+  const checkOrphanStories = useCallback(async () => {
+    if (!state.connectionStatus.connected) return;
+    try {
+      const chatFileNames = state.recentChats.map(chat => chat.fileName);
+      const response = await fetch(ORPHAN_STORIES_API, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ chatFileNames }),
+      });
+      if (response.ok) {
+        const data = await response.json();
+        setOrphanCount(data.count || 0);
+      }
+    } catch (error) {
+      console.error('Failed to check orphan stories:', error);
+    }
+  }, [state.connectionStatus.connected, state.recentChats]);
+
+  // Delete all orphan stories
+  const handleDeleteOrphans = async () => {
+    if (orphanCount === 0) return;
+    if (!confirm(`Delete ${orphanCount} orphan ${orphanCount === 1 ? 'story' : 'stories'}? These are generated story files without associated chats.`)) {
+      return;
+    }
+    setIsDeletingOrphans(true);
+    try {
+      const chatFileNames = state.recentChats.map(chat => chat.fileName);
+      const response = await fetch(ORPHAN_STORIES_API, {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ chatFileNames }),
+      });
+      if (response.ok) {
+        const data = await response.json();
+        setOrphanCount(0);
+        if (data.count > 0) {
+          // Show success message briefly
+          alert(`Deleted ${data.count} orphan ${data.count === 1 ? 'story' : 'stories'}.`);
+        }
+      } else {
+        alert('Failed to delete orphan stories. Please try again.');
+      }
+    } catch (error) {
+      console.error('Failed to delete orphan stories:', error);
+      alert('Failed to delete orphan stories. Please try again.');
+    } finally {
+      setIsDeletingOrphans(false);
+    }
+  };
+
+  // Check for orphans when chats change or connection is established
+  useEffect(() => {
+    checkOrphanStories();
+  }, [checkOrphanStories]);
+
   const handleStartRename = (chatId: string, currentTitle: string, e?: React.MouseEvent) => {
     if (e) e.stopPropagation();
     setContextMenuId(null);
@@ -1599,6 +1735,30 @@ function StoryUIPanel({ mcpPort }: StoryUIPanelProps) {
                 </div>
               ))}
             </div>
+
+            {/* Orphan Stories Footer */}
+            {orphanCount > 0 && (
+              <div className="sui-orphan-footer">
+                <button
+                  className="sui-orphan-delete-btn"
+                  onClick={handleDeleteOrphans}
+                  disabled={isDeletingOrphans}
+                  title={`${orphanCount} story ${orphanCount === 1 ? 'file has' : 'files have'} no associated chat`}
+                >
+                  {isDeletingOrphans ? (
+                    <>
+                      <span className="sui-orphan-spinner" />
+                      <span>Deleting...</span>
+                    </>
+                  ) : (
+                    <>
+                      {Icons.trash}
+                      <span>{orphanCount} orphan {orphanCount === 1 ? 'story' : 'stories'}</span>
+                    </>
+                  )}
+                </button>
+              </div>
+            )}
 
           </div>
         )}

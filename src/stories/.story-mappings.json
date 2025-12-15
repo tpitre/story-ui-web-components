@@ -19,12 +19,12 @@
   },
   {
     "title": "Simple Button",
-    "fileName": "primary-button-shoelace-097617b6.stories.tsx",
-    "storyId": "primary-button-shoelace-097617b6.stories.tsx",
-    "hash": "52eb666f",
+    "fileName": "simple-button-9dc6fdaf.stories.ts",
+    "storyId": "story-9dc6fdaf",
+    "hash": "9dc6fdaf",
     "createdAt": "2025-12-03T02:12:33.026Z",
-    "updatedAt": "2025-12-03T02:12:33.026Z",
-    "prompt": "Now make the button bigger."
+    "updatedAt": "2025-12-14T23:21:53.365Z",
+    "prompt": "A simple button"
   },
   {
     "title": "Simple Info Alert with Icon",
@@ -91,12 +91,12 @@
   },
   {
     "title": "Dropdown Menu",
-    "fileName": "dropdown-menu-62e084b2.stories.ts",
-    "storyId": "story-62e084b2",
-    "hash": "62e084b2",
+    "fileName": "dropdown-menu-7b90ff9f.stories.ts",
+    "storyId": "story-7b90ff9f",
+    "hash": "7b90ff9f",
     "createdAt": "2025-12-14T03:08:03.034Z",
-    "updatedAt": "2025-12-14T03:08:03.034Z",
-    "prompt": "Create a dropdown menu"
+    "updatedAt": "2025-12-14T23:46:45.120Z",
+    "prompt": "A dropdown menu"
   },
   {
     "title": "Spinner Loading",
@@ -133,5 +133,23 @@
     "createdAt": "2025-12-14T03:09:17.177Z",
     "updatedAt": "2025-12-14T03:09:17.177Z",
     "prompt": "Create a badge component"
+  },
+  {
+    "title": "Shoelace Button Component",
+    "fileName": "shoelace-button-component-217ea945.stories.ts",
+    "storyId": "story-217ea945",
+    "hash": "217ea945",
+    "createdAt": "2025-12-14T21:30:55.517Z",
+    "updatedAt": "2025-12-14T21:30:55.517Z",
+    "prompt": "Create a simple Shoelace button component"
+  },
+  {
+    "title": "Simple Alert",
+    "fileName": "simple-alert-ed40a6a5.stories.ts",
+    "storyId": "story-ed40a6a5",
+    "hash": "ed40a6a5",
+    "createdAt": "2025-12-14T23:21:35.138Z",
+    "updatedAt": "2025-12-14T23:21:35.138Z",
+    "prompt": "A simple alert"
   }
 ]

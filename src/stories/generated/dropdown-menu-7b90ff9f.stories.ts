@@ -10,6 +10,7 @@ import '@shoelace-style/shoelace/dist/components/icon/icon.js';
 
 const meta: Meta = {
   title: 'Generated/Dropdown Menu',
+  id: 'dropdown-menu-7b90ff9f',
   tags: ['autodocs'],
   parameters: { layout: 'centered' },
 };
@@ -20,11 +21,11 @@ type Story = StoryObj;
 export const Default: Story = {
   render: () => html`
     <sl-dropdown>
-      <sl-button slot="trigger" caret>Dropdown</sl-button>
+      <sl-button slot="trigger" caret>Options</sl-button>
       <sl-menu>
-        <sl-menu-item>Item 1</sl-menu-item>
-        <sl-menu-item>Item 2</sl-menu-item>
-        <sl-menu-item>Item 3</sl-menu-item>
+        <sl-menu-item>Edit</sl-menu-item>
+        <sl-menu-item>Copy</sl-menu-item>
+        <sl-menu-item>Delete</sl-menu-item>
       </sl-menu>
     </sl-dropdown>
   `,
@@ -36,16 +37,16 @@ export const WithIcons: Story = {
       <sl-button slot="trigger" caret variant="primary">Actions</sl-button>
       <sl-menu>
         <sl-menu-item>
-          <sl-icon slot="prefix" name="file-earmark"></sl-icon>
-          New File
+          <sl-icon slot="prefix" name="pencil"></sl-icon>
+          Edit
         </sl-menu-item>
         <sl-menu-item>
-          <sl-icon slot="prefix" name="folder"></sl-icon>
-          New Folder
+          <sl-icon slot="prefix" name="files"></sl-icon>
+          Copy
         </sl-menu-item>
         <sl-menu-item>
-          <sl-icon slot="prefix" name="upload"></sl-icon>
-          Upload
+          <sl-icon slot="prefix" name="download"></sl-icon>
+          Download
         </sl-menu-item>
         <sl-divider></sl-divider>
         <sl-menu-item>
@@ -57,20 +58,30 @@ export const WithIcons: Story = {
   `,
 };
 
-export const WithLabels: Story = {
+export const WithSections: Story = {
   render: () => html`
     <sl-dropdown>
       <sl-button slot="trigger" caret>Menu</sl-button>
       <sl-menu>
-        <sl-menu-label>Navigation</sl-menu-label>
-        <sl-menu-item>Home</sl-menu-item>
-        <sl-menu-item>About</sl-menu-item>
-        <sl-menu-item>Contact</sl-menu-item>
+        <sl-menu-label>File</sl-menu-label>
+        <sl-menu-item>
+          <sl-icon slot="prefix" name="file-earmark-plus"></sl-icon>
+          New File
+        </sl-menu-item>
+        <sl-menu-item>
+          <sl-icon slot="prefix" name="folder-plus"></sl-icon>
+          New Folder
+        </sl-menu-item>
         <sl-divider></sl-divider>
-        <sl-menu-label>Account</sl-menu-label>
-        <sl-menu-item>Profile</sl-menu-item>
-        <sl-menu-item>Settings</sl-menu-item>
-        <sl-menu-item>Logout</sl-menu-item>
+        <sl-menu-label>Edit</sl-menu-label>
+        <sl-menu-item>
+          <sl-icon slot="prefix" name="clipboard"></sl-icon>
+          Copy
+        </sl-menu-item>
+        <sl-menu-item>
+          <sl-icon slot="prefix" name="clipboard-check"></sl-icon>
+          Paste
+        </sl-menu-item>
       </sl-menu>
     </sl-dropdown>
   `,
@@ -79,14 +90,14 @@ export const WithLabels: Story = {
 export const UserMenu: Story = {
   render: () => html`
     <sl-dropdown placement="bottom-end">
-      <sl-button slot="trigger" caret>
+      <sl-button slot="trigger" caret variant="text">
         <sl-icon slot="prefix" name="person-circle"></sl-icon>
         John Doe
       </sl-button>
       <sl-menu>
         <sl-menu-item>
           <sl-icon slot="prefix" name="person"></sl-icon>
-          My Profile
+          Profile
         </sl-menu-item>
         <sl-menu-item>
           <sl-icon slot="prefix" name="gear"></sl-icon>
@@ -95,11 +106,6 @@ export const UserMenu: Story = {
         <sl-menu-item>
           <sl-icon slot="prefix" name="bell"></sl-icon>
           Notifications
-        </sl-menu-item>
-        <sl-divider></sl-divider>
-        <sl-menu-item>
-          <sl-icon slot="prefix" name="question-circle"></sl-icon>
-          Help
         </sl-menu-item>
         <sl-divider></sl-divider>
         <sl-menu-item>
@@ -118,7 +124,7 @@ export const Disabled: Story = {
       <sl-menu>
         <sl-menu-item>Available Option</sl-menu-item>
         <sl-menu-item disabled>Disabled Option</sl-menu-item>
-        <sl-menu-item>Another Available Option</sl-menu-item>
+        <sl-menu-item>Another Option</sl-menu-item>
       </sl-menu>
     </sl-dropdown>
   `,

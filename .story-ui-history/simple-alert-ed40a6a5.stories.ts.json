@@ -1,0 +1,14 @@
+{
+  "storyId": "simple-alert-ed40a6a5.stories.ts",
+  "title": "Simple Alert Ed40a6a5.Stories.Ts",
+  "versions": [
+    {
+      "id": "d933d23fff527eb1",
+      "timestamp": 1765754495139,
+      "prompt": "A simple alert",
+      "code": "import { html } from 'lit';\nimport type { Meta, StoryObj } from '@storybook/web-components';\nimport '@shoelace-style/shoelace/dist/components/alert/alert.js';\nimport '@shoelace-style/shoelace/dist/components/icon/icon.js';\n\nconst meta: Meta = {\n  title: 'Generated/Simple Alert',\n  id: 'simple-alert-ed40a6a5',\n  tags: ['autodocs'],\n  parameters: { layout: 'padded' },\n  argTypes: {\n    variant: {\n      control: 'select',\n      options: ['primary', 'success', 'neutral', 'warning', 'danger'],\n    },\n    closable: {\n      control: 'boolean',\n    },\n  },\n};\n\nexport default meta;\ntype Story = StoryObj;\n\nexport const Default: Story = {\n  args: {\n    variant: 'primary',\n    closable: false,\n  },\n  render: (args) => html`\n    <sl-alert variant=${args.variant} ?open=${true} ?closable=${args.closable}>\n      <sl-icon slot=\"icon\" name=\"info-circle\"></sl-icon>\n      This is a standard alert. You can customize its appearance with the variant property.\n    </sl-alert>\n  `,\n};\n\nexport const Success: Story = {\n  render: () => html`\n    <sl-alert variant=\"success\" ?open=${true}>\n      <sl-icon slot=\"icon\" name=\"check2-circle\"></sl-icon>\n      <strong>Your changes have been saved</strong><br />\n      The document was successfully updated.\n    </sl-alert>\n  `,\n};\n\nexport const Warning: Story = {\n  render: () => html`\n    <sl-alert variant=\"warning\" ?open=${true}>\n      <sl-icon slot=\"icon\" name=\"exclamation-triangle\"></sl-icon>\n      <strong>Warning</strong><br />\n      This action requires your attention.\n    </sl-alert>\n  `,\n};\n\nexport const Danger: Story = {\n  render: () => html`\n    <sl-alert variant=\"danger\" ?open=${true}>\n      <sl-icon slot=\"icon\" name=\"exclamation-octagon\"></sl-icon>\n      <strong>Error</strong><br />\n      Something went wrong. Please try again.\n    </sl-alert>\n  `,\n};\n\nexport const Closable: Story = {\n  render: () => html`\n    <sl-alert variant=\"primary\" ?open=${true} ?closable=${true}>\n      <sl-icon slot=\"icon\" name=\"info-circle\"></sl-icon>\n      This alert can be closed by clicking the close button.\n    </sl-alert>\n  `,\n};\n\nexport const WithoutIcon: Story = {\n  render: () => html`\n    <sl-alert variant=\"neutral\" ?open=${true}>\n      A simple alert without an icon.\n    </sl-alert>\n  `,\n};",
+      "fileName": "simple-alert-ed40a6a5.stories.ts"
+    }
+  ],
+  "currentVersionId": "d933d23fff527eb1"
+}
